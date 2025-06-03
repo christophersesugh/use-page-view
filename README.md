@@ -2,7 +2,7 @@
 
 A React hook for tracking page views and user engagement time. This hook provides real-time monitoring of user activity, page visibility, and time spent on pages.
 
-![npm version](https://img.shields.io/npm/v/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
+[![npm version](https://img.shields.io/npm/v/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
 [![npm downloads](https://img.shields.io/npm/dm/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
 [![License](https://img.shields.io/npm/l/use-page-view.svg)](https://github.com/christophersesugh/use-page-view/blob/main/LICENSE)
 [![CI Status](https://img.shields.io/github/actions/workflow/status/christophersesugh/use-page-view/ci.yml)](https://github.com/christophersesugh/use-page-view/actions)

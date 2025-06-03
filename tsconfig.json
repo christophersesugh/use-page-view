@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["@vitest/browser/matchers"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
