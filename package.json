@@ -22,13 +22,17 @@
     "url": "https://github.com/christophersesugh/use-page-view/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
     "test": "",
     "format": "prettier --write .",
-    "ci": "npm run build"
+    "format:check": "prettier --check .",
+    "exports:check": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+    "ci": "npm run build && npm run format:check"
   },
   "license": "MIT",
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.1",
+    "tsdown": "^0.12.6",
     "typescript": "^5.8.3"
   }
 }
