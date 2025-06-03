@@ -1,12 +1,28 @@
 {
 	"name": "use-page-view",
 	"version": "0.0.1",
+	"description": "React hook for tracking page views",
+	"type": "module",
 	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"react",
+		"page-view",
+		"typescript"
+	],
+	"author": "Christopher S. Aondona <me@codingsimba.com> (https://codingsimba.com)",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/christophersesugh/use-page-view.git"
+	},
+	"homepage": "https://github.com/christophersesugh/use-page-view",
+	"bugs": {
+		"url": "https://github.com/christophersesugh/use-page-view/issues"
+	},
 	"scripts": {
 		"test": ""
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"description": ""
+	"license": "MIT"
 }
