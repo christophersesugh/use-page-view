@@ -1,0 +1,12 @@
+{
+	"name": "use-page-view",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"scripts": {
+		"test": ""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}
