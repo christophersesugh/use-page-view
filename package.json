@@ -33,8 +33,12 @@
     "prepublishOnly": "npm run ci"
   },
   "license": "MIT",
+  "dependencies": {
+    "react": "^19.1.0"
+  },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.1",
+    "@types/react": "^19.1.6",
     "tsdown": "^0.12.6",
     "typescript": "^5.8.3",
     "vitest": "^3.2.0"
