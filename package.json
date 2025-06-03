@@ -28,7 +28,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "exports:check": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "ci": "npm run build && npm run format:check && npm run lint && npm run test"
+    "release:local": "changeset version && changeset publish",
+    "ci": "npm run build && npm run format:check && npm run lint && npm run test",
+    "prepublishOnly": "npm run ci"
   },
   "license": "MIT",
   "devDependencies": {
