@@ -26,12 +26,12 @@
     "test": "vitest",
     "lint": "tsc",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format:check": "prettier . --check",
     "exports:check": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "release:local": "changeset version && changeset publish",
-    "ci": "npm run build && npm run format:check && npm run lint && npm run test",
     "prepublishOnly": "npm run ci",
-    "test:browser": "vitest"
+    "test:browser": "vitest run",
+    "ci": "npm run build && npm run format:check && npm run lint && npm run test"
   },
   "license": "MIT",
   "dependencies": {
@@ -47,6 +47,7 @@
     "@vitejs/plugin-react": "^4.5.1",
     "@vitest/browser": "^3.2.0",
     "playwright": "^1.52.0",
+    "prettier": "^3.5.3",
     "tsdown": "^0.12.6",
     "typescript": "^5.8.3",
     "vitest": "^3.2.0",
