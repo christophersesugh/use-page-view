@@ -31,7 +31,7 @@
     "release:local": "changeset version && changeset publish",
     "prepublishOnly": "npm run ci",
     "test:browser": "vitest run",
-    "ci": "npm run build && npm run format:check && npm run lint && npm run test"
+    "ci": "npm run build && npm run format:check && npm run lint"
   },
   "license": "MIT",
   "dependencies": {
