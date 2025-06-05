@@ -82,7 +82,6 @@ npm run test:watch
 
 - We use TypeScript for type safety
 - We use Prettier for code formatting
-- We use ESLint for code linting
 
 To check your code style:
 
