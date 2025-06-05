@@ -23,15 +23,15 @@
   },
   "scripts": {
     "build": "tsdown",
-    "test": "vitest",
+    "test:watch": "vitest",
+    "test": "vitest run",
     "lint": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier . --check",
     "exports:check": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "release:local": "changeset version && changeset publish",
     "prepublishOnly": "npm run ci",
-    "test:browser": "vitest run",
-    "ci": "npm run build && npm run format:check && npm run lint"
+    "ci": "npm run build && npm run format:check && npm run lint && npm run test"
   },
   "license": "MIT",
   "dependencies": {
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.1",
+    "@changesets/cli": "^2.29.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "^19.1.6",

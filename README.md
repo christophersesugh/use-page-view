@@ -199,10 +199,6 @@ The hook uses the following browser APIs:
 
 It's compatible with all modern browsers that support these features.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## License
 
 MIT © [Christopher S. Aondona](https://codingsimba.com)

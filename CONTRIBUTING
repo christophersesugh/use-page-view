@@ -51,11 +51,17 @@ If you have a suggestion for a new feature or enhancement, please:
 
    ```bash
    npm install
+   # or
+   npm install --legacy-peer-deps
    ```
 
-3. Start development:
+3. Link and test locally after making changes (optional):
+
    ```bash
-   npm run dev
+   # In this project's directory, run
+   npm link
+   # In your test app, run
+   npm link use-page-view
    ```
 
 ## Testing
@@ -63,7 +69,7 @@ If you have a suggestion for a new feature or enhancement, please:
 We use Vitest for testing. To run the tests:
 
 ```bash
-npm test
+npm run test
 ```
 
 To run tests in watch mode:
@@ -108,10 +114,51 @@ Please follow these guidelines for commit messages:
 
 ## Release Process
 
-1. Update version in `package.json`
-2. Update CHANGELOG.md
-3. Create a new tag
-4. Push to npm
+1. **Version Management**:
+
+   - Use `changeset` to manage versions
+   - Run `npm run release:local` to create a new version
+   - This will:
+     - Update the version in `package.json`
+     - Generate a changelog
+     - Create a git tag
+
+2. **Publishing**:
+
+   - Only maintainers can publish to npm
+   - Maintainers will:
+     - Run `npm publish` to publish to npm
+     - Ensure all tests pass with `npm run ci`
+     - Verify the package on npm
+
+3. **Post-Release**:
+   - Push changes to GitHub
+   - Create a GitHub release
+   - Update documentation if needed
+
+## Contributing
+
+1. **Development Workflow**:
+
+   - Fork the repository
+   - Create a feature branch
+   - Make your changes
+   - Run tests: `npm run ci`
+   - Push to GitHub
+   - Open a Pull Request
+
+2. **Pull Request Process**:
+
+   - Ensure all tests pass
+   - Update documentation if needed
+   - Follow the existing code style
+   - Wait for maintainer review
+   - Address any feedback
+   - Once approved, a maintainer will merge your PR
+
+3. **After Merging**:
+   - Maintainers will handle versioning and publishing
+   - Your changes will be included in the next release
 
 ## Questions?
 
