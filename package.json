@@ -1,6 +1,6 @@
 {
   "name": "use-page-view",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "React hook for tracking page views",
   "type": "module",
   "main": "dist/index.js",
@@ -29,7 +29,8 @@
     "format": "prettier --write .",
     "format:check": "prettier . --check",
     "exports:check": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "release:local": "changeset version && changeset publish",
+    "release:version": "changeset version",
+    "release:local": "changeset && changeset version && changeset publish",
     "prepublishOnly": "npm run ci",
     "ci": "npm run build && npm run format:check && npm run lint && npm run test"
   },
