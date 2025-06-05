@@ -201,4 +201,4 @@ It's compatible with all modern browsers that support these features.
 
 ## License
 
-MIT © [Christopher S. Aondona](https://codingsimba.com)
+MIT © [Coding Simba](https://codingsimba.com)
