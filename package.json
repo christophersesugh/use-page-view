@@ -1,6 +1,6 @@
 {
   "name": "use-page-view",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "React hook for tracking page views",
   "type": "module",
   "main": "dist/index.js",
@@ -32,7 +32,7 @@
     "release:version": "changeset version",
     "release:local": "changeset && changeset version && changeset publish",
     "prepublishOnly": "npm run ci",
-    "ci": "npm run build && npm run format:check && npm run lint && npm run test"
+    "ci": "npm run build && npm run format:check && npm run lint && npm run export:check && npm run test"
   },
   "license": "MIT",
   "dependencies": {
