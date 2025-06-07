@@ -1,6 +1,6 @@
 # use-page-view
 
-A React hook for tracking page views and user engagement time. This hook provides real-time monitoring of user activity, page visibility, and time spent on pages.
+A React hook for tracking page views and user engagement time. This hook provides real-time tracking of how long users spend on a page, their activity status, and the ability to persist time tracking across page reloads.
 
 [![npm version](https://img.shields.io/npm/v/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
 [![npm downloads](https://img.shields.io/npm/dm/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
@@ -12,10 +12,11 @@ A React hook for tracking page views and user engagement time. This hook provide
 
 - 📊 Track time spent on pages
 - 👀 Monitor user activity and page visibility
-- ⏱️ Configurable tracking intervals
-- 🔄 Real-time updates
-- 🎯 Support for both continuous and one-time tracking
-- 🛡️ TypeScript support
+- 🔄 Periodic updates through callback
+- 💾 Optional localStorage persistence
+- ⏱️ Configurable thresholds and intervals
+- 🎯 Support for one-time tracking
+- 🔑 User identification support
 
 ## Installation
 
@@ -27,7 +28,7 @@ yarn add use-page-view
 pnpm add use-page-view
 ```
 
-## Basic Usage
+## Usage
 
 ```tsx
 import { usePageView } from 'use-page-view';
@@ -35,124 +36,16 @@ import { usePageView } from 'use-page-view';
 function BlogPost() {
   const { timeSpent, isActive } = usePageView({
     pageId: 'blog-post-123',
-    onPageView: (data) => {
-      // Handle page view data
-      console.log(data);
-    },
-  });
-
-  return (
-    <div>
-      <div>
-        Time spent: {timeSpent}s {isActive ? '🟢' : '🔴'}
-      </div>
-      <article>Your content here...</article>
-    </div>
-  );
-}
-```
-
-## API Reference
-
-### Parameters
-
-The `usePageView` hook accepts an options object with the following properties:
-
-| Parameter             | Type                           | Required | Default | Description                                                            |
-| --------------------- | ------------------------------ | -------- | ------- | ---------------------------------------------------------------------- |
-| `pageId`              | `string`                       | Yes      | -       | Unique identifier for the page being tracked                           |
-| `userId`              | `string`                       | No       | -       | Optional user identifier if user is logged in                          |
-| `minTimeThreshold`    | `number`                       | No       | `5`     | Minimum time in seconds before recording a view                        |
-| `heartbeatInterval`   | `number`                       | No       | `30`    | How often to send updates in seconds                                   |
-| `inactivityThreshold` | `number`                       | No       | `30`    | Time in seconds before user is considered inactive                     |
-| `onPageView`          | `(data: PageViewData) => void` | No       | -       | Callback function to handle page view data                             |
-| `trackOnce`           | `boolean`                      | No       | `false` | Track only the initial view                                            |
-| `trackOnceDelay`      | `number`                       | No       | `0`     | Minimum time in seconds before recording a view when trackOnce is true |
-
-### Return Value
-
-The hook returns an object with the following properties:
-
-| Property    | Type      | Description                                      |
-| ----------- | --------- | ------------------------------------------------ |
-| `timeSpent` | `number`  | Total time spent on the page in seconds          |
-| `isActive`  | `boolean` | Whether the user is currently active on the page |
-
-### PageViewData Interface
-
-The `onPageView` callback receives a `PageViewData` object with the following structure:
-
-```typescript
-interface PageViewData {
-  pageId: string; // The page identifier
-  userId?: string; // Optional user identifier
-  timeSpent: number; // Time spent in seconds
-  isActive: boolean; // Whether the user is active
-}
-```
-
-## Advanced Usage
-
-### Tracking User-Specific Views
-
-```tsx
-function UserProfile() {
-  const { timeSpent, isActive } = usePageView({
-    pageId: 'user-profile',
-    userId: 'user-123', // Track for specific user
-    onPageView: (data) => {
-      // Send to your analytics service
-      analytics.trackPageView(data);
-    },
-  });
-}
-```
-
-### Custom Tracking Intervals
-
-```tsx
-function Article() {
-  const { timeSpent, isActive } = usePageView({
-    pageId: 'article-456',
-    minTimeThreshold: 10, // Only track after 10 seconds
-    heartbeatInterval: 60, // Send updates every minute
-    inactivityThreshold: 120, // Consider user inactive after 2 minutes
-    onPageView: (data) => {
-      // Handle page view data
-    },
-  });
-}
-```
-
-### One-Time Tracking
-
-```tsx
-function LandingPage() {
-  const { timeSpent, isActive } = usePageView({
-    pageId: 'landing-page',
-    trackOnce: true, // Only track the initial view
-    trackOnceDelay: 5, // Wait 5 seconds before tracking
-    onPageView: (data) => {
-      // Handle initial page view
-    },
-  });
-}
-```
-
-### Custom Time Formatting
-
-```tsx
-function formatTime(seconds: number): string {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
-function BlogPost() {
-  const { timeSpent, isActive } = usePageView({
-    pageId: 'blog-post-123',
-    onPageView: (data) => {
-      // Handle page view data
+    userId: 'user-456', // Optional
+    minTimeThreshold: 10, // Minimum time before recording (seconds)
+    heartbeatInterval: 30, // How often to send updates (seconds)
+    inactivityThreshold: 60, // Time before user is considered inactive (seconds)
+    persistTimeSpent: true, // Enable localStorage persistence
+    onPageView: async (data) => {
+      await fetch('/api/track-page-view', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
     },
   });
 
@@ -161,44 +54,134 @@ function BlogPost() {
       <div>
         Time: {formatTime(timeSpent)} {isActive ? '🟢' : '🔴'}
       </div>
+      <article>Your content here...</article>
+    </div>
+  );
+}
+
+// Helper function to format time
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+```
+
+## API
+
+### usePageView(options)
+
+#### Options
+
+| Option                | Type                           | Default  | Description                                                            |
+| --------------------- | ------------------------------ | -------- | ---------------------------------------------------------------------- |
+| `pageId`              | `string`                       | Required | Unique identifier for the page being tracked                           |
+| `userId`              | `string`                       | Optional | User identifier if user is logged in                                   |
+| `minTimeThreshold`    | `number`                       | `5`      | Minimum time in seconds before recording a view                        |
+| `heartbeatInterval`   | `number`                       | `30`     | How often to send updates in seconds                                   |
+| `inactivityThreshold` | `number`                       | `30`     | Time in seconds before user is considered inactive                     |
+| `onPageView`          | `(data: PageViewData) => void` | Optional | Callback function to handle page view data                             |
+| `trackOnce`           | `boolean`                      | `false`  | Track only the initial view                                            |
+| `trackOnceDelay`      | `number`                       | `0`      | Minimum time in seconds before recording a view when trackOnce is true |
+| `persistTimeSpent`    | `boolean`                      | `false`  | Whether to persist the timeSpent value in localStorage                 |
+
+#### Returns
+
+| Property    | Type      | Description                                      |
+| ----------- | --------- | ------------------------------------------------ |
+| `timeSpent` | `number`  | Total time spent on the page in seconds          |
+| `isActive`  | `boolean` | Whether the user is currently active on the page |
+
+### PageViewData
+
+```typescript
+interface PageViewData {
+  pageId: string;
+  userId?: string;
+  timeSpent: number;
+  isActive: boolean;
+}
+```
+
+## Examples
+
+### Basic Usage with Persistence
+
+```tsx
+function Article() {
+  const { timeSpent, isActive } = usePageView({
+    pageId: 'article-789',
+    persistTimeSpent: true, // Enable localStorage persistence
+    onPageView: (data) => {
+      console.log('Article view:', data);
+    },
+  });
+
+  return (
+    <div>
+      <h1>Article Title</h1>
+      <div>Time spent: {formatTime(timeSpent)}</div>
+      <p>Article content...</p>
     </div>
   );
 }
 ```
 
-## Best Practices
-
-1. **Unique Page IDs**: Always use unique identifiers for each page to ensure accurate tracking.
-
-2. **User Identification**: Include `userId` when tracking authenticated users for better analytics.
-
-3. **Performance**:
-
-   - Use appropriate `heartbeatInterval` values to balance real-time updates with performance
-   - Consider using `trackOnce` for pages where continuous tracking isn't needed
-
-4. **Error Handling**: Always implement error handling in your `onPageView` callback:
+### One-time Tracking with Persistence
 
 ```tsx
-const handlePageView = async (data: PageViewData) => {
-  try {
-    await analytics.trackPageView(data);
-  } catch (error) {
-    console.error('Failed to track page view:', error);
-    // Implement fallback or retry logic
-  }
-};
+function LandingPage() {
+  const { timeSpent, isActive } = usePageView({
+    pageId: 'landing-page',
+    trackOnce: true,
+    trackOnceDelay: 30, // Track after 30 seconds
+    persistTimeSpent: true, // Persist time across page reloads
+    onPageView: (data) => {
+      analytics.track('landing_page_view', data);
+    },
+  });
+
+  return (
+    <div>
+      <h1>Welcome</h1>
+      <div>Time on page: {formatTime(timeSpent)}</div>
+    </div>
+  );
+}
 ```
 
-## Browser Support
+## Features in Detail
 
-The hook uses the following browser APIs:
+### Time Tracking
 
-- `document.visibilitychange`
-- `window.addEventListener` for user activity events
+- Tracks total time spent on the page
+- Updates every second
+- Can persist time across page reloads with `persistTimeSpent`
 
-It's compatible with all modern browsers that support these features.
+### Activity Monitoring
+
+- Detects user activity through mouse, keyboard, and touch events
+- Monitors page visibility changes
+- Updates active status based on user engagement
+
+### Persistence
+
+- Optional localStorage persistence with `persistTimeSpent`
+- Maintains time tracking across page reloads
+- Uses unique keys per page to prevent conflicts
+- Handles invalid stored values gracefully
+
+### Callback System
+
+- Periodic updates through `onPageView` callback
+- Configurable update interval with `heartbeatInterval`
+- Minimum time threshold with `minTimeThreshold`
+- One-time tracking option with `trackOnce`
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
-MIT © [Coding Simba](https://codingsimba.com)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
