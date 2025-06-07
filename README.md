@@ -4,6 +4,7 @@ A React hook for tracking page views and user engagement time. This hook provide
 
 [![npm version](https://img.shields.io/npm/v/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
 [![npm downloads](https://img.shields.io/npm/dm/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/use-page-view)](https://bundlephobia.com/package/use-page-view)
 [![License](https://img.shields.io/npm/l/use-page-view.svg)](https://github.com/christophersesugh/use-page-view/blob/main/LICENSE)
 [![CI Status](https://img.shields.io/github/actions/workflow/status/christophersesugh/use-page-view/ci.yml)](https://github.com/christophersesugh/use-page-view/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/christophersesugh/use-page-view)](https://codecov.io/gh/christophersesugh/use-page-view)
@@ -17,6 +18,8 @@ A React hook for tracking page views and user engagement time. This hook provide
 - ⏱️ Configurable thresholds and intervals
 - 🎯 Support for one-time tracking
 - 🔑 User identification support
+- 🚀 Lightweight with minimal overhead
+- 🌐 SSR/Next.js compatible
 
 ## Installation
 
@@ -27,6 +30,36 @@ yarn add use-page-view
 # or
 pnpm add use-page-view
 ```
+
+## Quick Start
+
+```tsx
+import { usePageView } from 'use-page-view';
+
+function MyPage() {
+  const { timeSpent, isActive } = usePageView({
+    pageId: 'my-page',
+    onPageView: (data) => console.log('Page view:', data),
+  });
+
+  return (
+    <div>
+      <h1>My Page</h1>
+      <p>
+        Time spent: {timeSpent}s {isActive ? '🟢 Active' : '🔴 Inactive'}
+      </p>
+    </div>
+  );
+}
+```
+
+## Compatibility
+
+- **React**: 16.8+ (hooks support required)
+- **TypeScript**: Full TypeScript support included
+- **Browsers**: Modern browsers with localStorage support
+- **SSR**: Compatible with React Router, Next.js and other SSR frameworks
+- **React Native**: Not supported (web-only)
 
 ## Usage
 
@@ -42,10 +75,15 @@ function BlogPost() {
     inactivityThreshold: 60, // Time before user is considered inactive (seconds)
     persistTimeSpent: true, // Enable localStorage persistence
     onPageView: async (data) => {
-      await fetch('/api/track-page-view', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      try {
+        await fetch('/api/track-page-view', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch (error) {
+        console.error('Failed to track page view:', error);
+      }
     },
   });
 
@@ -150,6 +188,34 @@ function LandingPage() {
 }
 ```
 
+### Error Handling
+
+```tsx
+function PageWithErrorHandling() {
+  const { timeSpent, isActive } = usePageView({
+    pageId: 'important-page',
+    onPageView: async (data) => {
+      try {
+        const response = await fetch('/api/analytics', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Analytics tracking failed:', error);
+        // Optionally queue for retry or use alternative tracking
+      }
+    },
+  });
+
+  return <div>Your page content</div>;
+}
+```
+
 ## Features in Detail
 
 ### Time Tracking
@@ -157,12 +223,14 @@ function LandingPage() {
 - Tracks total time spent on the page
 - Updates every second
 - Can persist time across page reloads with `persistTimeSpent`
+- Handles browser tab switching and page visibility changes
 
 ### Activity Monitoring
 
 - Detects user activity through mouse, keyboard, and touch events
 - Monitors page visibility changes
 - Updates active status based on user engagement
+- Configurable inactivity threshold
 
 ### Persistence
 
@@ -170,6 +238,7 @@ function LandingPage() {
 - Maintains time tracking across page reloads
 - Uses unique keys per page to prevent conflicts
 - Handles invalid stored values gracefully
+- Falls back to memory-only tracking if localStorage is unavailable
 
 ### Callback System
 
@@ -177,6 +246,34 @@ function LandingPage() {
 - Configurable update interval with `heartbeatInterval`
 - Minimum time threshold with `minTimeThreshold`
 - One-time tracking option with `trackOnce`
+
+## Performance
+
+- **Minimal overhead**: Efficient event handling with automatic cleanup
+- **Memory efficient**: Uses `requestIdleCallback` when available
+- **Bundle size**: < 5KB minified + gzipped
+- **No dependencies**: Zero external dependencies for maximum compatibility
+- **Automatic cleanup**: All event listeners and timers are cleaned up on unmount
+
+## FAQ
+
+**Q: Does this work with SSR/React Router/Next.js?**
+A: Yes, the hook safely handles server-side rendering by checking for browser environment before initializing.
+
+**Q: What happens if localStorage is disabled?**
+A: The hook gracefully falls back to memory-only tracking without throwing errors.
+
+**Q: How accurate is the time tracking?**
+A: Time tracking is updated every second and accounts for page visibility changes and user inactivity.
+
+**Q: Can I track multiple pages in the same app?**
+A: Yes, use different `pageId` values for each page or component you want to track separately.
+
+**Q: Does this affect my app's performance?**
+A: No, the hook uses efficient event handling and cleanup. The bundle size is minimal (< 5KB).
+
+**Q: What events are considered "activity"?**
+A: Mouse movement, clicks, keyboard input, touch events, and scroll events are all considered user activity.
 
 ## Contributing
 
