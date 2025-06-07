@@ -19,7 +19,7 @@ A React hook for tracking page views and user engagement time. This hook provide
 - 🎯 Support for one-time tracking
 - 🔑 User identification support
 - 🚀 Lightweight with minimal overhead
-- 🌐 SSR/Next.js compatible
+- 🌐 SSR/React Router/Next.js compatible
 
 ## Installation
 
