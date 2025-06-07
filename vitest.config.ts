@@ -11,6 +11,12 @@ export default defineConfig({
     },
     coverage: {
       reporter: ['text', 'lcov'],
+      exclude: [
+        'src/index.ts',
+        'dist/**',
+        'tsdown.config.ts',
+        'vitest.config.ts',
+      ],
     },
   },
 });
