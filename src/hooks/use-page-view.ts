@@ -31,6 +31,8 @@ interface UsePageViewOptions {
   trackOnce?: boolean;
   /** Minimum time in seconds before recording a view when trackOnce is true (default: 0) */
   trackOnceDelay?: number;
+  /** Whether to persist the timeSpent value in localStorage (default: false) */
+  persistTimeSpent?: boolean;
 }
 
 /**
@@ -47,6 +49,7 @@ interface UsePageViewOptions {
  * @param options.onPageView - Callback function to handle page view data
  * @param options.trackOnce - Track only the initial view (default: false)
  * @param options.trackOnceDelay - Minimum time in seconds before recording a view when trackOnce is true (default: 0)
+ * @param options.persistTimeSpent - Whether to persist the timeSpent value in localStorage (default: false)
  *
  * @returns An object containing:
  *   - timeSpent: number - Total time spent on the page in seconds
@@ -75,7 +78,8 @@ interface UsePageViewOptions {
  *     minTimeThreshold: 10,
  *     heartbeatInterval: 30,
  *     inactivityThreshold: 60, // User considered inactive after 60 seconds
- *     onPageView: handlePageView
+ *     onPageView: handlePageView,
+ *     persistTimeSpent: true, // Enable localStorage persistence
  *   });
  *
  *   return (
@@ -84,6 +88,30 @@ interface UsePageViewOptions {
  *         Time: {formatTime(timeSpent)} {isActive ? '🟢' : '🔴'}
  *       </div>
  *       <article>Your content here...</article>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Example with trackOnce and persistTimeSpent
+ * function Article() {
+ *   const { timeSpent, isActive } = usePageView({
+ *     pageId: 'article-789',
+ *     trackOnce: true,
+ *     trackOnceDelay: 30, // Track after 30 seconds
+ *     persistTimeSpent: true, // Persist time across page reloads
+ *     onPageView: (data) => {
+ *       console.log('Article view:', data);
+ *     },
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       <h1>Article Title</h1>
+ *       <div>Time spent: {formatTime(timeSpent)}</div>
+ *       <p>Article content...</p>
  *     </div>
  *   );
  * }
@@ -98,13 +126,27 @@ export function usePageView({
   onPageView,
   trackOnce = false,
   trackOnceDelay = 0,
+  persistTimeSpent = false,
 }: UsePageViewOptions) {
-  const [timeSpent, setTimeSpent] = React.useState(0);
+  const [timeSpent, setTimeSpent] = React.useState(() => {
+    if (persistTimeSpent && typeof window !== 'undefined') {
+      const stored = window.localStorage.getItem(`page-view-${pageId}`);
+      return stored ? parseInt(stored, 10) : 0;
+    }
+    return 0;
+  });
   const [isActive, setIsActive] = React.useState(true);
   const startTimeRef = React.useRef<number>(0);
   const lastActiveRef = React.useRef<number>(0);
   const onPageViewRef = React.useRef(onPageView);
   const hasTrackedRef = React.useRef(false);
+
+  // Save timeSpent to localStorage when it changes
+  React.useEffect(() => {
+    if (persistTimeSpent && typeof window !== 'undefined') {
+      window.localStorage.setItem(`page-view-${pageId}`, timeSpent.toString());
+    }
+  }, [timeSpent, persistTimeSpent, pageId]);
 
   // Initialize timestamps on client-side only to avoid hydration errors
   React.useEffect(() => {
