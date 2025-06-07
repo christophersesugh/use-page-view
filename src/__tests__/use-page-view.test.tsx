@@ -15,7 +15,6 @@ describe('usePageView', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     mockOnPageView.mockClear();
-    window.localStorage.clear();
     Object.defineProperty(document, 'hidden', {
       configurable: true,
       value: false,
