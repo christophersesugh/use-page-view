@@ -1,6 +1,6 @@
 {
   "name": "use-page-view",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "A React hook for tracking page views and user engagement time. This hook provides real-time tracking of how long users spend on a page, their activity status, and the ability to persist time tracking across page reloads.",
   "type": "module",
   "main": "dist/index.js",

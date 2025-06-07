@@ -1,6 +1,6 @@
 # use-page-view
 
-A React hook for tracking page views and user engagement time. This hook provides real-time tracking of how long users spend on a page, their activity status, and the ability to persist time tracking across page reloads.
+A React hook for tracking page views and user engagement time. This hook provides real-time tracking of how long users spend on a page, their activity status, and flexible callbacks for implementing custom persistence and analytics.
 
 [![npm version](https://img.shields.io/npm/v/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
 [![npm downloads](https://img.shields.io/npm/dm/use-page-view.svg)](https://www.npmjs.com/package/use-page-view)
@@ -14,12 +14,12 @@ A React hook for tracking page views and user engagement time. This hook provide
 - 📊 Track time spent on pages
 - 👀 Monitor user activity and page visibility
 - 🔄 Periodic updates through callback
-- 💾 Optional localStorage persistence
 - ⏱️ Configurable thresholds and intervals
 - 🎯 Support for one-time tracking
 - 🔑 User identification support
 - 🚀 Lightweight with minimal overhead
 - 🌐 SSR/React Router/Next.js compatible
+- 🛠️ Flexible - implement your own persistence strategy
 
 ## Installation
 
@@ -57,7 +57,7 @@ function MyPage() {
 
 - **React**: 16.8+ (hooks support required)
 - **TypeScript**: Full TypeScript support included
-- **Browsers**: Modern browsers with localStorage support
+- **Browsers**: Modern browsers
 - **SSR**: Compatible with React Router, Next.js and other SSR frameworks
 - **React Native**: Not supported (web-only)
 
@@ -73,7 +73,6 @@ function BlogPost() {
     minTimeThreshold: 10, // Minimum time before recording (seconds)
     heartbeatInterval: 30, // How often to send updates (seconds)
     inactivityThreshold: 60, // Time before user is considered inactive (seconds)
-    persistTimeSpent: true, // Enable localStorage persistence
     onPageView: async (data) => {
       try {
         await fetch('/api/track-page-view', {
@@ -121,7 +120,6 @@ function formatTime(seconds: number): string {
 | `onPageView`          | `(data: PageViewData) => void` | Optional | Callback function to handle page view data                             |
 | `trackOnce`           | `boolean`                      | `false`  | Track only the initial view                                            |
 | `trackOnceDelay`      | `number`                       | `0`      | Minimum time in seconds before recording a view when trackOnce is true |
-| `persistTimeSpent`    | `boolean`                      | `false`  | Whether to persist the timeSpent value in localStorage                 |
 
 #### Returns
 
@@ -143,13 +141,12 @@ interface PageViewData {
 
 ## Examples
 
-### Basic Usage with Persistence
+### Basic Usage
 
 ```tsx
 function Article() {
   const { timeSpent, isActive } = usePageView({
     pageId: 'article-789',
-    persistTimeSpent: true, // Enable localStorage persistence
     onPageView: (data) => {
       console.log('Article view:', data);
     },
@@ -165,7 +162,7 @@ function Article() {
 }
 ```
 
-### One-time Tracking with Persistence
+### One-time Tracking
 
 ```tsx
 function LandingPage() {
@@ -173,7 +170,6 @@ function LandingPage() {
     pageId: 'landing-page',
     trackOnce: true,
     trackOnceDelay: 30, // Track after 30 seconds
-    persistTimeSpent: true, // Persist time across page reloads
     onPageView: (data) => {
       analytics.track('landing_page_view', data);
     },
@@ -222,8 +218,8 @@ function PageWithErrorHandling() {
 
 - Tracks total time spent on the page
 - Updates every second
-- Can persist time across page reloads with `persistTimeSpent`
 - Handles browser tab switching and page visibility changes
+- Supports custom initial time values for persistence scenarios
 
 ### Activity Monitoring
 
@@ -232,13 +228,10 @@ function PageWithErrorHandling() {
 - Updates active status based on user engagement
 - Configurable inactivity threshold
 
-### Persistence
+### Flexible Persistence
 
-- Optional localStorage persistence with `persistTimeSpent`
-- Maintains time tracking across page reloads
-- Uses unique keys per page to prevent conflicts
-- Handles invalid stored values gracefully
-- Falls back to memory-only tracking if localStorage is unavailable
+- No built-in persistence to keep the library lightweight
+- Easy to implement custom persistence strategies
 
 ### Callback System
 
@@ -260,8 +253,8 @@ function PageWithErrorHandling() {
 **Q: Does this work with SSR/React Router/Next.js?**
 A: Yes, the hook safely handles server-side rendering by checking for browser environment before initializing.
 
-**Q: What happens if localStorage is disabled?**
-A: The hook gracefully falls back to memory-only tracking without throwing errors.
+**Q: How do I persist time tracking across page reloads?**
+A: Implement your own persistence strategy using the examples above. You can use localStorage, sessionStorage, databases, or any other storage method that fits your needs.
 
 **Q: How accurate is the time tracking?**
 A: Time tracking is updated every second and accounts for page visibility changes and user inactivity.
@@ -270,10 +263,13 @@ A: Time tracking is updated every second and accounts for page visibility change
 A: Yes, use different `pageId` values for each page or component you want to track separately.
 
 **Q: Does this affect my app's performance?**
-A: No, the hook uses efficient event handling and cleanup. The bundle size is minimal (< 5KB).
+A: No, the hook uses efficient event handling and cleanup. The bundle size is minimal (< 3KB).
 
 **Q: What events are considered "activity"?**
 A: Mouse movement, clicks, keyboard input, touch events, and scroll events are all considered user activity.
+
+**Q: Why doesn't the hook include built-in localStorage support?**
+A: To keep the library lightweight and flexible. Different applications have different persistence needs, and this approach allows you to implement exactly what you need without bloating the core library.
 
 ## Contributing
 
