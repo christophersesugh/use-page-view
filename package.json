@@ -1,7 +1,7 @@
 {
   "name": "use-page-view",
   "version": "1.1.0",
-  "description": "React hook for tracking page views",
+  "description": "A React hook for tracking page views and user engagement time. This hook provides real-time tracking of how long users spend on a page, their activity status, and the ability to persist time tracking across page reloads.",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -9,8 +9,19 @@
   ],
   "keywords": [
     "react",
+    "hooks",
     "page-view",
-    "typescript"
+    "analytics",
+    "tracking",
+    "engagement",
+    "time-tracking",
+    "localstorage",
+    "persistence",
+    "typescript",
+    "react-hooks",
+    "user-activity",
+    "page-visibility",
+    "performance-monitoring"
   ],
   "author": "Christopher S. Aondona <me@codingsimba.com> (https://codingsimba.com)",
   "repository": {
