@@ -6,4 +6,4 @@
 
 ## Contributors
 
-<!-- Add contributors here as they contribute to the project --> 
+<!-- Add contributors here as they contribute to the project -->
